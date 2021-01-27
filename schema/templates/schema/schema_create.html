@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    {% load static %}
+    <script src="{% static 'controls.js' %}"></script>
+
+    <title>New schema</title>
+</head>
+<body>
+<script>
+    $(document).ready(function() {add_csv_column();});
+</script>
+
+<header>
+    <nav class="navbar navbar-light bg-light">
+        <ul class="nav justify-content-start mx-5">
+            <a class="navbar-brand" href="#">FakeCSV</a>
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'schema:schema_list' %}"
+                   style="color:black;">Schemas</a>
+            </li>
+        </ul>
+
+        <ul class="nav justify-content-end">
+            <span class="navbar-text">Hello, {{user.username}}</span>
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'logout' %}" style="color:grey;">
+                    Logout</a>
+            </li>
+        </ul>
+    </nav>
+</header>
+
+<div class="container g-3 mx-5">
+
+    <div class="col-md-6 my-4 mb-4">
+        <h2>New Schema</h2>
+    </div>
+
+    <form onsubmit="prepare_schema_columns_data()" method="POST">
+        {% csrf_token %}
+        <!-- Section with CSV document settings (ex. delimiter used) -->
+        <div class="row g-3">
+            <div class="col col-6">
+                <label for="name" class="form-label">Name</label>
+                <input type="text" class="form-control" id="name"
+                       name="title" placeholder value required>
+                <div class="invalid-feedback">Valid name is required</div>
+            </div>
+            <div class="col col-4">
+                <button class="btn btn-primary" type="submit">Submit</button>
+            </div>
+        </div>
+        <div class="row g-3 my-2">
+            <div class="col col-6">
+                <label for="column_separator" class="form-label">Column separator</label>
+                <select class="form-select" id="column_separator" name="column_separator">
+                    {% if column_separators %}
+                    {% for separator in column_separators %}
+                        <option value="{{ separator.value }}">
+                            {{ separator.name }}
+                        </option>
+                    {% endfor %}
+                    {% endif %}
+                </select>
+            </div>
+        </div>
+        <div class="row g-3 my-2">
+            <div class="col col-6">
+                <label for="string_character" class="form-label">String character</label>
+                <select class="form-select" id="string_character" name="string_character">
+                    {% if string_characters %}
+                    {% for character in string_characters %}
+                        <option value="{{ character.value }}">
+                            {{ character.name }}
+                        </option>
+                    {% endfor %}
+                    {% endif %}
+                </select>
+            </div>
+        </div>
+
+
+        <!-- Section with CSV document model (columns) -->
+        <div class="row g-3 mt-3">
+            <h4 class="mb-3">Schema columns</h4>
+        </div>
+
+
+        <input type="hidden" value="{{ column_types }}" id="column_types">
+        <div class="row g-3" id="columns">
+
+            <!-- CSV document columns are add here -->
+
+        </div>
+        <input type="hidden" name="columns" id="prepared_columns">
+        <button class="btn btn-primary my-3" onclick="add_csv_column()">Add column</button>
+    </form>
+</div>
+</body>
+</html>

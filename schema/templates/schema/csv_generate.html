@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    {% load static %}
+    <script src="{% static 'controls.js' %}"></script>
+
+    <title>Edit schema</title>
+    <style>
+    .row-table {
+        margin-left: 100px;
+        margin-right: 100px;
+         width: 80%;
+    }
+    .table {
+        table-layout: fixed;
+        width: 80%;
+        margin-left: 100px;
+        margin-right: 100px;
+    }
+    </style>
+</head>
+<body>
+
+<header>
+    <nav class="navbar navbar-light bg-light">
+        <ul class="nav justify-content-start mx-5">
+            <a class="navbar-brand" href="#">FakeCSV</a>
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'schema:schema_list' %}"
+                   style="color:black;">Schemas</a>
+            </li>
+        </ul>
+
+        <ul class="nav justify-content-end">
+            <span class="navbar-text">Hello, {{user.username}}</span>
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'logout' %}" style="color:grey;">
+                    Logout</a>
+            </li>
+        </ul>
+    </nav>
+</header>
+
+<main>
+    <div class="container g-3 my-5">
+        <div class="row g-3 row-table mb-4">
+            <div class="col-md-6">
+                <h2>Data Sets</h2>
+            </div>
+            <div class="col-md-6 row-12">
+                <form class="form-horizontal" role="form" method="POST">
+                    {% csrf_token %}
+                    <div class="form-group row">
+                        <label for="rows_number"
+                               class="col-md-2 col-form-label mx-2">Rows
+                        </label>
+                        <div class="col-md-6">
+                            <input class="form-control" type="number"
+                               id="rows_number"
+                               name="rows_number" value="10">
+                        </div>
+                        <button class="btn btn-success col-md-3">
+                            Generate data</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <table class="table table-bordered" width=50%>
+            <thead>
+                <tr>
+                    <th class="col-2">#</th>
+                    <th class="col-4">Created</th>
+                    <th class="col-4">Status</th>
+                    <th class="col-2">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if task_list %}
+                    {% for task in task_list %}
+                    <tr>
+                        <th>{{ forloop.counter }}</th>
+                        <td>{{ task.created_at }}</td>
+                        <td><h5>
+                            {% if task.status == "Ready" %}
+                            <span class="badge bg-success">
+                                {{ task.status }}
+                            </span>
+                            {% elif task.status == "Failed" %}
+                            <span class="badge bg-danger">
+                                {{ task.status }}
+                            </span>
+                            {% else %}
+                            <span class="badge bg-secondary">
+                                {{ task.status }}
+                            </span>
+                            {% endif %}
+
+                        </h5></td>
+                        <td>
+                            {% if task.status == "Ready" %}
+                                {% with task_id=task.id|stringformat:'s' %}
+                                <a class="btn btn-link link-primary text-decoration-none"
+                                   href="{% url 'schema:download_csv_file' task_id %}">
+                                    Download
+                                </a>
+                                {% endwith %}
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</main>
+
+</body>
+</html>

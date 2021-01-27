@@ -1,0 +1,9 @@
+.idea
+*.log
+*.pyc
+__pychache__
+venv/
+
+.DS_Store
+
+docker_postgres/

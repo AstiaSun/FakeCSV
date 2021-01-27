@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+
+    <title>Data schemas</title>
+    <style>
+    .row-table {
+        margin-left: 100px;
+        margin-right: 100px;
+         width: 80%;
+    }
+    .table {
+        table-layout: fixed;
+        width: 80%;
+        margin-left: 100px;
+        margin-right: 100px;
+    }
+    </style>
+</head>
+<body>
+<header>
+    <nav class="navbar navbar-light bg-light">
+        <ul class="nav justify-content-start mx-5">
+            <a class="navbar-brand" href="#">FakeCSV</a>
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'schema:schema_list' %}"
+                   style="color:black;">Schemas</a>
+            </li>
+        </ul>
+
+        <ul class="nav justify-content-end">
+            <span class="navbar-text">Hello, {{user.username}}</span>
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'logout' %}" style="color:grey;">
+                    Logout</a>
+            </li>
+        </ul>
+    </nav>
+</header>
+
+<main>
+    <div class="row g-3">
+        <div class="row g-3 row-table">
+            <div class="col-10">
+                <h2>Data Schemas</h2>
+            </div>
+            <div class="col-2">
+                <a class="btn btn-success btn-sm"
+                   href="{% url 'schema:schema_create' %}">New schema</a>
+            </div>
+        </div>
+        <table class="table table-bordered" width=50%>
+            <thead>
+                <tr>
+                    <th class="col-2">#</th>
+                    <th class="col-4">Title</th>
+                    <th class="col-4">Modified</th>
+                    <th class="col-2">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if schema_list %}
+                    {% for schema in schema_list %}
+                    <tr>
+                        <th>{{ forloop.counter }}</th>
+                        <td><a href="{% url 'schema:generate' schema.id %}">
+                            {{schema.title }}</a>
+                        </td>
+                        <td>{{ schema.updated_at }}</td>
+                        <td>
+                            <!-- TODO: implement edit and delete functions -->
+
+                            <a class="btn btn-link text-decoration-none">Edit</a>
+                            <a class="btn btn-link link-danger text-decoration-none">Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</main>
+
+</body>
+</html>
