@@ -114,8 +114,7 @@ def upload_to_cloud(task_id: str, csv_file_path: str):
     client = Minio(
         MINIO_HOST,
         access_key=MINIO_ACCESS_KEY,
-        secret_key=MINIO_SECRET_KEY,
-        secure=False
+        secret_key=MINIO_SECRET_KEY
     )
     client.fput_object(
         BUCKET_NAME,

@@ -1,6 +1,6 @@
 """S3 bucket configurations."""
 
-MINIO_HOST = 'vps614994.ovh.net:9000'
-MINIO_ACCESS_KEY = 'minioadmin'
-MINIO_SECRET_KEY = 'minioadmin'
+MINIO_HOST = 'vps614994.ovh.net'
+MINIO_ACCESS_KEY = ''
+MINIO_SECRET_KEY = ''
 BUCKET_NAME = 'fake-csv'
